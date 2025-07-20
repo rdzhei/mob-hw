@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  symfony-app:
+    build:
+      context: ..
+      dockerfile: docker/symfony-app/Dockerfile
+    volumes:
+      - ../.:/var/www/html
+
+#  nginx:
+#    image: nginx:latest
+#    ports:
+#      - "8080:80"
+#    volumes:
+#      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+#    depends_on:
+#      - php-app
+
