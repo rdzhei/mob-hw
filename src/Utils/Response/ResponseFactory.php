@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ResponseFactory implements ResponseFactoryInterface
 {
 
-    public function createUnauthorizedResponse(): ResponseInterface
+    public function createUnauthorizedResponse(): Response
     {
         return new Response(
             content: json_encode([
