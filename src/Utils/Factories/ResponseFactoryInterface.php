@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Utils\Response;
+namespace App\Utils\Factories;
 
 use Symfony\Component\HttpFoundation\Response;
 
@@ -14,5 +14,11 @@ interface ResponseFactoryInterface
     // I could, of course extend Symfony's Response class and then implement
     // ResponseInterface in the child, but that would be a bit of an overkill for this task
     public function createUnauthorizedResponse(): Response;
+
+    public function createSuccessfulDataResponse(
+        array $data = [],
+        int $status = Response::HTTP_OK,
+        array $headers = [],
+    ): Response;
 
 }

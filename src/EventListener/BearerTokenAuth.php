@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace App\EventListener;
 
 use App\Environment\EnvProviderInterface;
-use App\Utils\Response\ResponseFactoryInterface;
+use App\Utils\Factories\ResponseFactoryInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+
 class BearerTokenAuth
 {
     public const AUTH_TOKEN_PARAM_KEY = 'app.auth-token';
