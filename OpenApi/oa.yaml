@@ -1,0 +1,125 @@
+openapi: 3.0.0
+info:
+  title: 'Weather station API'
+  version: '0.1'
+paths:
+  /stations:
+    get:
+      summary: 'Get all weather station ids and names'
+      operationId: e5993929fcc87c8c2ab6e2477025a79e
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  success: { type: boolean, default: false }
+                  data: { type: array, items: { $ref: '#/components/schemas/WeatherStationIdName' } }
+                type: object
+        '500':
+          description: Error
+          content:
+            application/json:
+              schema:
+                properties:
+                  success: { type: boolean, default: false }
+                  message: { type: string }
+                type: object
+  '/stations/{stationId}':
+    get:
+      summary: 'Get elaborate weather station data by id'
+      operationId: 350d9051a30076c49db0870c8501fcb9
+      parameters:
+        -
+          name: stationId
+          in: path
+          description: 'Weather station id'
+          required: true
+          schema:
+            type: string
+            example: KALNCIEM
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  success: { type: boolean }
+                  data: { $ref: '#/components/schemas/WeatherStation' }
+                type: object
+        '404':
+          description: 'Weather station not found'
+          content:
+            application/json:
+              schema:
+                properties:
+                  success: { type: boolean }
+                  message: { type: string }
+                type: object
+        '500':
+          description: Error
+          content:
+            application/json:
+              schema:
+                properties:
+                  success: { type: boolean }
+                  message: { type: string }
+                type: object
+components:
+  schemas:
+    WeatherStation:
+      properties:
+        STATION_ID:
+          type: string
+          example: KALNCIEM
+        NAME:
+          type: string
+        WMO_ID:
+          type: string
+          nullable: true
+        BEGIN_DATE:
+          type: string
+          nullable: true
+        END_DATE:
+          type: string
+          nullable: true
+        LATITUDE:
+          type: string
+          nullable: true
+        LONGITUDE:
+          type: string
+          nullable: true
+        GAUSS1:
+          type: string
+          nullable: true
+        GAUSS2:
+          type: string
+          nullable: true
+        GEOGR1:
+          type: string
+          nullable: true
+        GEOGR2:
+          type: string
+          nullable: true
+        ELEVATION:
+          type: string
+          nullable: true
+        ELEVATION_PRESSURE:
+          type: string
+          nullable: true
+      type: object
+    WeatherStationIdName:
+      title: 'Weather Station ID and Name'
+      description: 'Represents a weather station with its ID and name.'
+      properties:
+        STATION_ID:
+          description: 'The unique identifier of the weather station.'
+          type: string
+          example: KALNCIEM
+        NAME:
+          description: 'The name of the weather station.'
+          type: string
+          example: Kuldiga
+      type: object
