@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace App\Utils\Http;
 
 use App\Utils\Factories\RequestFactoryInterface;
-use GuzzleHttp\Exception\BadResponseException;
-use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Client\ClientInterface;
 
@@ -50,12 +48,12 @@ class HttpClient
                     $row = substr($buffer, 0, $pos);
                     $buffer = substr($buffer, $pos + 1);
 
-                    yield str_getcsv($row);
+                    yield str_getcsv($row, ',', '"', '\\');
                 }
             }
 
             if (!empty($buffer)) {
-                yield str_getcsv($buffer);
+                yield str_getcsv($buffer, ',', '"', '\\');
             }
 
         } catch (GuzzleException $exception) {

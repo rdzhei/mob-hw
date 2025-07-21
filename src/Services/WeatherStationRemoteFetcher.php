@@ -43,6 +43,7 @@ class WeatherStationRemoteFetcher implements WeatherStationProviderInterface
 
             if ($i === 0) {
                 $headers = $chunk;
+                $this->validateHeader($headers);
 
                 continue;
             }
@@ -67,6 +68,7 @@ class WeatherStationRemoteFetcher implements WeatherStationProviderInterface
         foreach ($res as $i => $chunk) {
             if ($i === 0) {
                 $headers = $chunk;
+                $this->validateHeader($headers);
 
                 continue;
             }
