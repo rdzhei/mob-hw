@@ -93,9 +93,9 @@ class WeatherStationRemoteFetcher implements WeatherStationProviderInterface
     {
 
         if (
-            ! in_array($header, WeatherStationFactory::ID_KEY)
+            ! in_array(WeatherStationFactory::ID_KEY, $header)
             ||
-            ! in_array($header, WeatherStationFactory::NAME_KEY)
+            ! in_array(WeatherStationFactory::NAME_KEY, $header)
         ) {
             // todo: log this error with the nastiest error level.
             // We cannot return a valid DTO with at least id and name
