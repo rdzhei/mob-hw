@@ -2,10 +2,13 @@
 declare(strict_types=1);
 namespace App\Services;
 
+use App\DTO\WeatherStation;
 use App\Environment\EnvProviderInterface;
 use App\DTO\WeatherStationIdName;
+use App\Exceptions\RemoteApi\CSVException;
 use App\Utils\Factories\WeatherStationFactory;
 use App\Utils\Http\HttpClient;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 /**
@@ -44,15 +47,60 @@ class WeatherStationRemoteFetcher implements WeatherStationProviderInterface
                 continue;
             }
 
+            $combinedStationRow = array_combine($headers, $chunk);
+
             $weatherStations[] = $this->weatherStationFactory
-                ->makeWeatherStationIdNameStructFromCsv($chunk, $headers);
+                ->makeWeatherStationIdNameStructFromCsv($combinedStationRow);
         }
 
         return $weatherStations;
     }
 
-    public function getWeatherStation(string $id)
+    public function getWeatherStation(string $id): ?WeatherStation
     {
-        // TODO: Implement getWeatherStation() method.
+        $res = $this->client->queryForCsv(
+            'GET',
+            $this->envProvider->getEnv(self::WEATHER_STATION_URL_API_ENV)
+        );
+
+        $headers = [];
+        foreach ($res as $i => $chunk) {
+            if ($i === 0) {
+                $headers = $chunk;
+
+                continue;
+            }
+
+            $combinedStationRow = array_combine($headers, $chunk);
+
+            if ($combinedStationRow[WeatherStationFactory::ID_KEY] !== $id) {
+                continue;
+            }
+
+            // It's possible to skip the hassle of building a DTO, and return a
+            // dirty array to the client. Returning whatever we receive would
+            // also safeguard us in cases if the remote API unexpectedly changes.
+            // However, in that case it's senseless to make an OA schema (which
+            // is a requirement of this task), because the OA schema would be unreliable.
+            return $this->weatherStationFactory
+                ->makeWeatherStationDTOFromCsv($combinedStationRow);
+        }
+
+        return null;
+    }
+
+    private function validateHeader(array $header): void
+    {
+
+        if (
+            ! in_array($header, WeatherStationFactory::ID_KEY)
+            ||
+            ! in_array($header, WeatherStationFactory::NAME_KEY)
+        ) {
+            // todo: log this error with the nastiest error level.
+            // We cannot return a valid DTO with at least id and name
+
+            throw new CSVException('Unexpected error', 500);
+        }
     }
 }

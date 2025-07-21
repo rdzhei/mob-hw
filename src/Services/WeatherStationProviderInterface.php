@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\DTO\WeatherStation;
 use App\DTO\WeatherStationIdName;
 
 interface WeatherStationProviderInterface
@@ -12,5 +13,5 @@ interface WeatherStationProviderInterface
     public function getAllWeatherStationIdNames(): array;
 
 
-    public function getWeatherStation(string $id);
+    public function getWeatherStation(string $id): ?WeatherStation;
 }
